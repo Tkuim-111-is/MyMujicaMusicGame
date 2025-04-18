@@ -23,5 +23,8 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, musicgame1::class.java)
             startActivity(intent)
         }
+
+        // 讀取歌曲詳細資料
+        ReadOnlySongDB.logAllSongs(this)
     }
 }
