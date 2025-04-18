@@ -1,0 +1,16 @@
+{
+  "bpm": 120,
+  "notes": [
+    { "time": 500, "lane": 0 },
+    { "time": 1000, "lane": 1 },
+    { "time": 1500, "lane": 2 },
+    { "time": 2000, "lane": 3 },
+    { "time": 2500, "lane": 4 },
+    { "time": 3000, "lane": 5 },
+    { "time": 3500, "lane": 5 },
+    { "time": 4000, "lane": 5 },
+    { "time": 4500, "lane": 5 },
+    { "time": 3000, "lane": 2 },
+    { "time": 3000, "lane": 1 }
+  ]
+}
