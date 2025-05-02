@@ -1,11 +1,13 @@
 package com.example.mygoxavemujica_music_game
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 
 class musicgame1 : AppCompatActivity() {
     private lateinit var noteView: NoteView
+    private lateinit var mediaPlayer: MediaPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -13,14 +15,24 @@ class musicgame1 : AppCompatActivity() {
         val notes = loadNotesFromJson()
         noteView = NoteView(this, notes)
 
+        mediaPlayer = MediaPlayer.create(this, R.raw.dora_a_mu)  // 這裡的 "music" 是放在 res/raw 下的音樂檔名
+        mediaPlayer.start()  // 播放音樂
+/*
         noteView.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 noteView.handleTouch(event.x, event.y)
             }
             true
         }
-
+*/
         setContentView(noteView) // ⚠️ 這裡會蓋掉原本的 XML 畫面
+    }
+
+    // 停止音樂（例如當遊戲結束時）
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.stop()  // 停止播放
+        mediaPlayer.release()  // 釋放資源
     }
 
     private fun loadNotesFromJson(): List<Note> {
@@ -30,12 +42,20 @@ class musicgame1 : AppCompatActivity() {
         val notesArray = jsonObject.getJSONArray("notes")
         for (i in 0 until notesArray.length()) {
             val obj = notesArray.getJSONObject(i)
-            notes.add(Note(obj.getLong("time"), obj.getInt("lane")))
+            notes.add(Note(obj.getLong("time"), obj.getInt("lane"), obj.getDouble("type")))
         }
         return notes
     }
 }
 
+/*
+// 停止音樂（例如當遊戲結束時）
+override fun onDestroy() {
+    super.onDestroy()
+    mediaPlayer.stop()  // 停止播放
+    mediaPlayer.release()  // 釋放資源
+}
+*/
 
 /*package com.example.mygoxavemujica_music_game
 
