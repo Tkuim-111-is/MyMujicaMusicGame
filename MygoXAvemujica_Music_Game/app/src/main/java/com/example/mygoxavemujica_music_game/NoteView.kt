@@ -105,19 +105,13 @@ class NoteView(context: Context, private val notes: List<Note>) : View(context) 
             }
 
             MotionEvent.ACTION_UP -> {
-                if (isHolding && holdingNote != null && holdEndNote != null) {
-                    if (currentHoldProgressTime >= holdEndNote!!.time - 100) {
-                        // 只有在成功時才設 hit
-                        holdingNote?.hit = true
-                        holdEndNote?.hit = true
-                    } else {
-                        cancelHold()
-                    }
-                    isHolding = false
-                    holdingNote = null
-                    holdEndNote = null
-                    invalidate()
-                }
+                holdingNote?.isHolding = false
+                holdEndNote?.isHolding = false
+
+                isHolding = false
+                holdingNote = null
+                holdEndNote = null
+                invalidate()
             }
         }
 
@@ -153,8 +147,6 @@ class NoteView(context: Context, private val notes: List<Note>) : View(context) 
     }
 
     private fun cancelHold() {
-        holdingNote?.hit = true
-        holdEndNote?.hit = true
         isHolding = false
         holdingNote = null
         holdEndNote = null

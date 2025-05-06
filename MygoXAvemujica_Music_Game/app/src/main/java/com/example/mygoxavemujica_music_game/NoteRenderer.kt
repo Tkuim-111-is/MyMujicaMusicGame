@@ -92,7 +92,7 @@ class NoteRenderer(
         val i = startNote.lane
         if (i < 0 || i >= laneLineCount - 1) return
 
-        val zStart = if (isHolding  && holdingNote == startNote && holdEndNote == endNote) 0f else (startNote.time - now).toFloat()
+        val zStart = if (isHolding && holdingNote == startNote && holdEndNote == endNote) 0f else (startNote.time - now).toFloat()
         val tStart = zStart / zMax
 
         val endTimeDynamic = endNote.time
@@ -111,21 +111,23 @@ class NoteRenderer(
             lerp(judgeY, lineEndY[i], tStart) // 未按下前正常往下掉
         val yEnd = lerp(judgeY, lineEndY[i], tEnd)
 
-        val path = Path().apply {
-            moveTo(xLeftStart, yStart)
-            lineTo(xRightStart, yStart)
-            lineTo(xRightEnd, yEnd)
-            lineTo(xLeftEnd, yEnd)
-            close()
-        }
-
-        paint.color = Color.argb(150, 0, 255, 0)
-        canvas.drawPath(path, paint)
-
-        if (abs(xLeftStart - xLeftEnd) < 1f && abs(yStart - yEnd) < 1f) {
+        if (abs(xLeftStart - xLeftEnd) < 1f) {
             startNote.hit = true
             endNote.hit = true
             return
+        }
+
+
+        if(!startNote.hit && startNote.isHolding){
+            val path = Path().apply {
+                moveTo(xLeftStart, yStart)
+                lineTo(xRightStart, yStart)
+                lineTo(xRightEnd, yEnd)
+                lineTo(xLeftEnd, yEnd)
+                close()
+            }
+            paint.color = Color.argb(150, 0, 255, 0)
+            canvas.drawPath(path, paint)
         }
 
         // 畫起點
