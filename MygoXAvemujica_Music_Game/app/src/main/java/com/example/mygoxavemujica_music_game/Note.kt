@@ -6,6 +6,6 @@ data class Note(
     val type: Double,
     var y: Float = 0f,
     var hit: Boolean = false,
-    var isHolding: Boolean = false,
+    var isHolding: Boolean = true,
     var isFlicked: Boolean = false
 )
