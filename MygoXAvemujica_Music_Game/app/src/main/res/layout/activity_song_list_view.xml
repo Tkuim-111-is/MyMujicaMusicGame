@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 左側：RecyclerView 顯示歌曲清單 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="143dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:contentDescription="歌曲列表"/>
+
+    <!-- 右側：詳細資料與開始遊戲按鈕 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:srcCompat="@drawable/imprisonedxii" />
+
+        <TextView
+            android:id="@+id/detail_title"
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:text="歌名"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/detail_singer"
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
+            android:text="演唱"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/start_button"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:text="開始遊戲" />
+    </LinearLayout>
+</LinearLayout>
