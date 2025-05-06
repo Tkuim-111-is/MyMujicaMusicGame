@@ -16,6 +16,8 @@ class musicgame1 : AppCompatActivity() {
         noteView = NoteView(this, notes)
 
         mediaPlayer = MediaPlayer.create(this, R.raw.dora_a_mu)  // 這裡的 "music" 是放在 res/raw 下的音樂檔名
+        val musicStartTime = System.currentTimeMillis()
+        noteView.setStartTime(musicStartTime)
         mediaPlayer.start()  // 播放音樂
 /*
         noteView.setOnTouchListener { _, event ->
@@ -25,7 +27,7 @@ class musicgame1 : AppCompatActivity() {
             true
         }
 */
-        setContentView(noteView) // ⚠️ 這裡會蓋掉原本的 XML 畫面
+        setContentView(noteView) //蓋掉原本的 XML 畫面
     }
 
     // 停止音樂（例如當遊戲結束時）
