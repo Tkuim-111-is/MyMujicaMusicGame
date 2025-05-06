@@ -9,8 +9,8 @@
 
     <Button
         android:id="@+id/start_game"
-        android:layout_width="923dp"
-        android:layout_height="1400dp"
+        android:layout_width="1271dp"
+        android:layout_height="648dp"
         android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,15 +21,15 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="921dp"
-        android:layout_height="410dp"
+        android:layout_width="994dp"
+        android:layout_height="444dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.6"
-        app:srcCompat="@drawable/startview" />
+        app:srcCompat="@raw/startview" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

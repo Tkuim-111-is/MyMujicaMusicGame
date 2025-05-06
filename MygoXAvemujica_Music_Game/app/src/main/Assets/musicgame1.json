@@ -1,5 +1,5 @@
 {
-  "bpm": 120,
+  "bpm": 240,
   "notes": [
     { "time": 500, "lane": 0 , "type": 1},
     { "time": 1000, "lane": 1 , "type": 1},
