@@ -1,33 +1,41 @@
 package com.example.mygoxavemujica_music_game
 
+import android.database.Cursor
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
+import com.example.mygoxavemujica_music_game.database.MyDatabaseHelper
 
 class musicgame1 : AppCompatActivity() {
+    private lateinit var dbHelper: MyDatabaseHelper
     private lateinit var noteView: NoteView
     private lateinit var mediaPlayer: MediaPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val notes = loadNotesFromJson()
-        noteView = NoteView(this, notes)
+        val songTitle = intent.getStringExtra("songTitle") ?: error("Missing songTitle")
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.dora_a_mu)  // 這裡的 "music" 是放在 res/raw 下的音樂檔名
+        dbHelper = MyDatabaseHelper(this)
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM songlist", null)
+        cursor.moveToFirst()
+
+        val notes = loadNotesFromJson(cursor, songTitle)
+        noteView = NoteView(this, notes)
+        if(songTitle == "A"){
+            mediaPlayer = MediaPlayer.create(this, R.raw.dora_a_mu)  // 這裡的 "music" 是放在 res/raw 下的音樂檔名
+        }
+        else if(songTitle == "B"){
+            mediaPlayer = MediaPlayer.create(this, R.raw.kage_syoku_mai)  // 這裡的 "music" 是放在 res/raw 下的音樂檔名
+        }
         val musicStartTime = System.currentTimeMillis()
         noteView.setStartTime(musicStartTime)
         mediaPlayer.start()  // 播放音樂
-/*
-        noteView.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                noteView.handleTouch(event.x, event.y)
-            }
-            true
-        }
-*/
+
         setContentView(noteView) //蓋掉原本的 XML 畫面
+        cursor.close()
     }
 
     // 停止音樂（例如當遊戲結束時）
@@ -37,8 +45,13 @@ class musicgame1 : AppCompatActivity() {
         mediaPlayer.release()  // 釋放資源
     }
 
-    private fun loadNotesFromJson(): List<Note> {
-        val json = assets.open("musicgame1.json").bufferedReader().use { it.readText() }
+    private fun loadNotesFromJson(cursor: Cursor, songTitle: String): List<Note> {
+        val json: String = when (songTitle) {
+            "A" -> assets.open("musicgame1.json").bufferedReader().use { it.readText() }
+            "B" -> assets.open("musicgame2.json").bufferedReader().use { it.readText() }
+            else -> throw IllegalArgumentException("Unknown song type: ${cursor.getString(1)}")
+        }
+
         val notes = mutableListOf<Note>()
         val jsonObject = org.json.JSONObject(json)
         val notesArray = jsonObject.getJSONArray("notes")

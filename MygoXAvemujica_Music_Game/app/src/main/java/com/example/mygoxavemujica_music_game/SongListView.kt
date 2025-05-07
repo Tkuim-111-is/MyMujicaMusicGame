@@ -37,6 +37,7 @@ class SongListView : AppCompatActivity() {
 
             startButton.setOnClickListener {
                 val intent = Intent(this, musicgame1::class.java)
+                intent.putExtra("songTitle", selectedSong.name)
                 startActivity(intent)
             }
         }
