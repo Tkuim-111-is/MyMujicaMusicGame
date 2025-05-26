@@ -46,6 +46,8 @@ class SongListView : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
+        recyclerView.addItemDecoration(WhiteDividerItemDecoration(1))
+
         if (songList.isNotEmpty()) {
             onItemClick(songList[0])
         }

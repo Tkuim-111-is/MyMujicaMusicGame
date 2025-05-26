@@ -11,7 +11,10 @@
         android:layout_width="143dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:contentDescription="歌曲列表"/>
+        android:layout_marginStart="40dp"
+        android:contentDescription="歌曲列表"
+        android:paddingTop="30dp"
+        android:clipToPadding="false"/>
 
     <!-- 右側：詳細資料與開始遊戲按鈕 -->
     <LinearLayout
