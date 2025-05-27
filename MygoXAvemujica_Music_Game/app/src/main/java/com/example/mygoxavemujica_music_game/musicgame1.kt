@@ -38,7 +38,7 @@ class musicgame1 : AppCompatActivity() {
             "KiLLKiSS" -> R.raw.music_killkiss
             "春日影" -> R.raw.music_haruhikage
             "迷星叫" -> R.raw.music_mayoiuta
-            else -> R.raw.dora_a_mu // 預設或測試用
+            else -> R.raw.music_silhouettedance // 預設或測試用
         }
 
         val jsonFileName = when (songTitle) {
@@ -47,7 +47,7 @@ class musicgame1 : AppCompatActivity() {
             "KiLLKiSS" -> "killkiss.json"
             "春日影" -> "haruhikage.json"
             "迷星叫" -> "mayoiuta.json"
-            else -> "musicgame1.json"
+            else -> "silhouettedance.json"
         }
 
         val notes = loadNotesFromJson(jsonFileName)
