@@ -19,19 +19,43 @@ class musicgame1 : AppCompatActivity() {
 
         dbHelper = MyDatabaseHelper(this)
         val db = dbHelper.readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM songlist", null)
-        cursor.moveToFirst()
+        // 只查詢指定歌曲
+        val cursor = db.rawQuery("SELECT * FROM songlist WHERE name = ?", arrayOf(songTitle))
+        if (!cursor.moveToFirst()) {
+            cursor.close()
+            error("找不到歌曲：$songTitle")
+        }
 
-        val notes = loadNotesFromJson(cursor, songTitle)
+        // 取得資料庫欄位
+        val singer = cursor.getString(cursor.getColumnIndexOrThrow("singer"))
+        val bpm = cursor.getInt(cursor.getColumnIndexOrThrow("BPM"))
+        val img = cursor.getString(cursor.getColumnIndexOrThrow("IMG"))
+
+        // 根據歌曲名稱決定資源檔名（這裡假設 IMG 欄位與資源檔名有關）
+        val musicResId = when (songTitle) {
+            "影色舞" -> R.raw.music_silhouettedance
+            "Imprisoned XII" -> R.raw.music_imprisonedxii
+            "KiLLKiSS" -> R.raw.music_killkiss
+            "春日影" -> R.raw.music_haruhikage
+            "迷星叫" -> R.raw.music_mayoiuta
+            else -> R.raw.dora_a_mu // 預設或測試用
+        }
+
+        val jsonFileName = when (songTitle) {
+            "影色舞" -> "kage_syoku_mai.json"
+            "Imprisoned XII" -> "imprisonedxii.json"
+            "KiLLKiSS" -> "killkiss.json"
+            "春日影" -> "haruhikage.json"
+            "迷星叫" -> "mayoiuta.json"
+            else -> "musicgame1.json"
+        }
+
+        val notes = loadNotesFromJson(jsonFileName)
         noteView = NoteView(this, notes)
-        if(songTitle == "A"){
-            mediaPlayer = MediaPlayer.create(this, R.raw.dora_a_mu)  // 這裡的 "music" 是放在 res/raw 下的音樂檔名
-        }
-        else if(songTitle == "B"){
-            mediaPlayer = MediaPlayer.create(this, R.raw.kage_syoku_mai)  // 這裡的 "music" 是放在 res/raw 下的音樂檔名
-        }
         val musicStartTime = System.currentTimeMillis()
         noteView.setStartTime(musicStartTime)
+
+        mediaPlayer = MediaPlayer.create(this, musicResId)
         mediaPlayer.start()  // 播放音樂
 
         setContentView(noteView) //蓋掉原本的 XML 畫面
@@ -45,13 +69,8 @@ class musicgame1 : AppCompatActivity() {
         mediaPlayer.release()  // 釋放資源
     }
 
-    private fun loadNotesFromJson(cursor: Cursor, songTitle: String): List<Note> {
-        val json: String = when (songTitle) {
-            "A" -> assets.open("musicgame1.json").bufferedReader().use { it.readText() }
-            "B" -> assets.open("musicgame2.json").bufferedReader().use { it.readText() }
-            else -> throw IllegalArgumentException("Unknown song type: ${cursor.getString(1)}")
-        }
-
+    private fun loadNotesFromJson(jsonFileName: String): List<Note> {
+        val json = assets.open(jsonFileName).bufferedReader().use { it.readText() }
         val notes = mutableListOf<Note>()
         val jsonObject = org.json.JSONObject(json)
         val notesArray = jsonObject.getJSONArray("notes")

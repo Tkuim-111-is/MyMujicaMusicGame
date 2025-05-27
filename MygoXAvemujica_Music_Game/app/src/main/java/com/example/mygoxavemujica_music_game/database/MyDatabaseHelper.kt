@@ -9,7 +9,7 @@ class MyDatabaseHelper(context: Context)
 
     companion object {
         private const val DATABASE_NAME = "MyAppDB.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -25,11 +25,11 @@ class MyDatabaseHelper(context: Context)
 
         db.execSQL(createUserTable)
 
-        db.execSQL("INSERT INTO songlist (name, singer, BPM) VALUES ('影色舞', 'MyGO!!!!!', 166,'img_silhouettedance')")
-        db.execSQL("INSERT INTO songlist (name, singer, BPM) VALUES ('Imprisoned XII', 'Ave Mujica', 158,'img_imprisonedxii')")
-        db.execSQL("INSERT INTO songlist (name, singer, BPM) VALUES ('KiLLKiSS', 'Ave Mujica', 200,'img_killkiss')")
-        db.execSQL("INSERT INTO songlist (name, singer, BPM) VALUES ('春日影', 'MyGO!!!!!', 97,'img_haruhikage')")
-        db.execSQL("INSERT INTO songlist (name, singer, BPM) VALUES ('迷星叫', 'MyGO!!!!!', 190,'img_mayoiuta')")
+        db.execSQL("INSERT INTO songlist (name, singer, BPM, IMG) VALUES ('影色舞', 'MyGO!!!!!', 166,'img_silhouettedance')")
+        db.execSQL("INSERT INTO songlist (name, singer, BPM, IMG) VALUES ('Imprisoned XII', 'Ave Mujica', 158,'img_imprisonedxii')")
+        db.execSQL("INSERT INTO songlist (name, singer, BPM, IMG) VALUES ('KiLLKiSS', 'Ave Mujica', 200,'img_killkiss')")
+        db.execSQL("INSERT INTO songlist (name, singer, BPM, IMG) VALUES ('春日影', 'MyGO!!!!!', 97,'img_haruhikage')")
+        db.execSQL("INSERT INTO songlist (name, singer, BPM, IMG) VALUES ('迷星叫', 'MyGO!!!!!', 190,'img_mayoiuta')")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
