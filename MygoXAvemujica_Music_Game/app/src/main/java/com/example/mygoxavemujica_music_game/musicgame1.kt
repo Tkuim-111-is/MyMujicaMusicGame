@@ -42,7 +42,7 @@ class musicgame1 : AppCompatActivity() {
         }
 
         val jsonFileName = when (songTitle) {
-            "影色舞" -> "kage_syoku_mai.json"
+            "影色舞" -> "silhouettedance.json"
             "Imprisoned XII" -> "imprisonedxii.json"
             "KiLLKiSS" -> "killkiss.json"
             "春日影" -> "haruhikage.json"

@@ -3,6 +3,7 @@ package com.example.mygoxavemujica_music_game
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +28,7 @@ class SongListView : AppCompatActivity() {
         loadSongsFromDatabase()
 
         recyclerView = findViewById(R.id.recyclerView)
+        val songImage = findViewById<ImageView>(R.id.song_image)
         val detailTitle = findViewById<TextView>(R.id.detail_title)
         val detailSinger = findViewById<TextView>(R.id.detail_singer)
         val startButton = findViewById<Button>(R.id.start_button)
@@ -34,6 +36,14 @@ class SongListView : AppCompatActivity() {
         val onItemClick: (Song) -> Unit = { selectedSong ->
             detailTitle.text = "歌名：${selectedSong.name}"
             detailSinger.text = "演唱：${selectedSong.singer}"
+            val resId = resources.getIdentifier(selectedSong.img, "drawable", packageName)
+
+            if (resId != 0) {
+                songImage.setImageResource(resId)
+            } else {
+                // 找不到圖片時，設定預設圖片或隱藏 ImageView
+                songImage.setImageResource(R.drawable.img_killkiss)
+            }
 
             startButton.setOnClickListener {
                 val intent = Intent(this, musicgame1::class.java)
@@ -61,7 +71,8 @@ class SongListView : AppCompatActivity() {
                 cursor.getInt(0),
                 cursor.getString(1),
                 cursor.getString(2),
-                cursor.getInt(3)
+                cursor.getInt(3),
+                cursor.getString(4)
             )
             songList.add(song)
         }
