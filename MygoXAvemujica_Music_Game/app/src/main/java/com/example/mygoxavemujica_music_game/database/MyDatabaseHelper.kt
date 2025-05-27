@@ -18,15 +18,18 @@ class MyDatabaseHelper(context: Context)
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
                 singer TEXT NOT NULL,
-                BPM INTEGER NOT NULL
+                BPM INTEGER NOT NULL,
+                IMG TEXT NOT NULL
             );
         """.trimIndent()
 
         db.execSQL(createUserTable)
 
-        db.execSQL("INSERT INTO songlist (name, singer, BPM) VALUES ('A', 'Alice', 12)")
-        db.execSQL("INSERT INTO songlist (name, singer, BPM) VALUES ('B', 'Bob', 23)")
-        db.execSQL("INSERT INTO songlist (name, singer, BPM) VALUES ('C', 'Charlie', 34)")
+        db.execSQL("INSERT INTO songlist (name, singer, BPM) VALUES ('影色舞', 'MyGO!!!!!', 166,'img_silhouettedance')")
+        db.execSQL("INSERT INTO songlist (name, singer, BPM) VALUES ('Imprisoned XII', 'Ave Mujica', 158,'img_imprisonedxii')")
+        db.execSQL("INSERT INTO songlist (name, singer, BPM) VALUES ('KiLLKiSS', 'Ave Mujica', 200,'img_killkiss')")
+        db.execSQL("INSERT INTO songlist (name, singer, BPM) VALUES ('春日影', 'MyGO!!!!!', 97,'img_haruhikage')")
+        db.execSQL("INSERT INTO songlist (name, singer, BPM) VALUES ('迷星叫', 'MyGO!!!!!', 190,'img_mayoiuta')")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
