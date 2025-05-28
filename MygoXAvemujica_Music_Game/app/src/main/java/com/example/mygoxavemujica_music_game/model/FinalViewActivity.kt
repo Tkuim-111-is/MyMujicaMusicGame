@@ -1,39 +1,65 @@
 package com.example.mygoxavemujica_music_game.model
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mygoxavemujica_music_game.R
-
+import com.example.mygoxavemujica_music_game.GameResult
+import com.example.mygoxavemujica_music_game.SongListView
+import com.example.mygoxavemujica_music_game.musicgame1
 
 class FinalViewActivity : AppCompatActivity() {
-    private lateinit var textView1: TextView
-    private lateinit var textView2: TextView
-    private lateinit var textView3: TextView
-    private lateinit var textView9: TextView
-    private lateinit var textView15: TextView
-    private lateinit var textView16: TextView
-    private lateinit var textView17: TextView
-    private lateinit var textView18: TextView
+    private lateinit var point: TextView
+    private lateinit var MaxCombo: TextView
+    private lateinit var Accuracy: TextView
+    private lateinit var Perfect: TextView
+    private lateinit var Great: TextView
+    private lateinit var Good: TextView
+    private lateinit var Bad: TextView
+    private lateinit var Miss: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.final_view)  // 這邊對應你的 XML 檔名
-        textView1 = findViewById(R.id.point)
-        textView2=findViewById(R.id.point)
-        textView3=findViewById(R.id.accuracy_num)
-        textView9=findViewById(R.id.perfect_num)
-        textView15=findViewById(R.id.Good_num)
-        textView16=findViewById(R.id.Bad_num)
-        textView17=findViewById(R.id.Miss_num)
-    }
-    public fun setText(content1: String, content2: String, content3: String,content9:String,content15:String,content16:String,content17:String,content18:String) {
-        textView1.text = content1
-        textView2.text = content2
-        textView3.text = content3
-        textView9.text = content9
-        textView15.text = content15
-        textView16.text = content16
-        textView17.text = content17
-        textView18.text = content18
+        point = findViewById(R.id.point)
+        MaxCombo = findViewById(R.id.maxCombo_num)
+        Accuracy = findViewById(R.id.accuracy_num)
+        Perfect = findViewById(R.id.perfect_num)
+        Great = findViewById(R.id.Great_num)
+        Good = findViewById(R.id.Good_num)
+        Bad = findViewById(R.id.Bad_num)
+        Miss = findViewById(R.id.Miss_num)
+
+        Perfect.text = GameResult.perfectCount.toString()
+        Great.text = GameResult.greatCount.toString()
+        Good.text = GameResult.goodCount.toString()
+        Bad.text = GameResult.badCount.toString()
+        Miss.text = GameResult.missCount.toString()
+        MaxCombo.text = GameResult.maxCombo.toString()
+
+        val totalNotes = GameResult.perfectCount + GameResult.greatCount + GameResult.goodCount + GameResult.badCount + GameResult.missCount
+        val hitNotes = GameResult.perfectCount + GameResult.greatCount + GameResult.goodCount + GameResult.badCount
+        val accuracy = if (totalNotes > 0) (hitNotes * 100.0 / totalNotes) else 0.0
+
+        Accuracy.text = String.format("%.2f%%", accuracy)
+
+        val point_average = 1000000/totalNotes
+        val pointScore = GameResult.perfectCount * point_average + GameResult.greatCount * 0.75 * point_average + GameResult.goodCount * 0.5 * point_average +  GameResult.badCount * 0.25 * point_average
+        point.text = pointScore.toString()
+
+        val GoBack = findViewById<ImageView>(R.id.goBack)
+        GoBack.setOnClickListener {
+            val intent = Intent(this, SongListView::class.java)
+            startActivity(intent)
+        }
+
+        val again = findViewById<ImageView>(R.id.playAgain)
+        again.setOnClickListener {
+            val intent = Intent(this, musicgame1::class.java)
+            intent.putExtra("songTitle", GameResult.songTitle)
+            startActivity(intent)
+        }
     }
 }

@@ -60,10 +60,10 @@ class NoteView(context: Context, private val notes: List<Note>) : View(context) 
     }
 
     // 判定時間窗口（毫秒）
-    private val PERFECT_WINDOW = 50
-    private val GREAT_WINDOW = 100
-    private val GOOD_WINDOW = 150
-    private val BAD_WINDOW = 200
+    private val PERFECT_WINDOW = 80
+    private val GREAT_WINDOW = 160
+    private val GOOD_WINDOW = 240
+    private val BAD_WINDOW = 320
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -146,89 +146,74 @@ class NoteView(context: Context, private val notes: List<Note>) : View(context) 
         val y = event.y
         val now = System.currentTimeMillis() - startTime
 
+        // 用 x 座標判斷落在哪個 lane
+        val laneTouched = getLaneFromX(x)
+
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                // 長按起點判定
-                notes.find {
-                    it.type == 2.0 && !it.hit && judge.isNoteTouched(it, x, y, now, fieldRenderer.lineStartX, fieldRenderer.lineEndX, fieldRenderer.lineEndY, height)
-                }?.let { start ->
-                    val end = notes.find { it.type == 2.5 && it.lane == start.lane && it.time > start.time && !it.hit }
-                    if (end != null) {
-                        val judgment = judgeTiming(start.time, now)
-                        if (judgment != "Miss") {
-                            holdingNote = start
-                            holdEndNote = end
-                            isHolding = true
-                            currentHoldProgressTime = start.time
+                if (laneTouched == null) return true // 沒判到 lane 就不處理
 
-                            // 只有 Perfect 跟 Great 才加 combo
-                            if (judgment == "Perfect" || judgment == "Great") {
-                                combo++
-                                showCombo = true
-                                comboBounceTime = System.currentTimeMillis()
+                // 找時間窗口內且同 lane 尚未擊中的音符（時間差最小者）
+                val candidateNote = notes.filter {
+                    !it.hit && it.lane == laneTouched && abs(it.time - now) <= BAD_WINDOW
+                }.minByOrNull { abs(it.time - now) }
+
+                if (candidateNote != null) {
+                    when (candidateNote.type) {
+                        1.0, 3.0 -> { // 單擊或上滑
+                            val judgment = judgeTiming(candidateNote.time, now)
+                            if (judgment != "Miss") {
+                                candidateNote.hit = true
+                                if (judgment == "Perfect" || judgment == "Great") {
+                                    combo++
+                                    showCombo = true
+                                    comboBounceTime = System.currentTimeMillis()
+                                } else {
+                                    combo = 0
+                                    showCombo = false
+                                }
+                                showJudgmentText(judgment)
                             } else {
                                 combo = 0
                                 showCombo = false
+                                showJudgmentText("Miss")
                             }
-
-                            showJudgmentText(judgment)
-                        } else {
-                            combo = 0
-                            showCombo = false
-                            showJudgmentText("Miss")
+                            invalidate()
+                            return true
                         }
-                        invalidate()
-                        return true
-                    }
-                }
-
-                // 單擊判定
-                notes.find { it.type == 1.0 && !it.hit && judge.isNoteTouched(it, x, y, now, fieldRenderer.lineStartX, fieldRenderer.lineEndX, fieldRenderer.lineEndY, height) }?.let { note ->
-                    val judgment = judgeTiming(note.time, now)
-                    if (judgment != "Miss") {
-                        note.hit = true
-                        // 只有 Perfect 跟 Great 才加 combo
-                        if (judgment == "Perfect" || judgment == "Great") {
-                            combo++
-                            showCombo = true
-                            comboBounceTime = System.currentTimeMillis()
-                        } else {
-                            combo = 0
-                            showCombo = false
-                        }
-                        showJudgmentText(judgment)
-                    } else {
-                        combo = 0
-                        showCombo = false
-                        showJudgmentText("Miss")
-                    }
-                    invalidate()
-                    return true
-                }
-
-                // 上滑判定
-                notes.find { it.type == 3.0 && !it.hit && judge.isNoteTouched(it, x, y, now, fieldRenderer.lineStartX, fieldRenderer.lineEndX, fieldRenderer.lineEndY, height) }?.let { note ->
-                    val judgment = judgeTiming(note.time, now)
-                    if (judgment != "Miss") {
-                        note.hit = true
-                        // 只有 Perfect 跟 Great 才加 combo
-                        if (judgment == "Perfect" || judgment == "Great") {
-                            combo++
-                            if (combo > GameResult.maxCombo) {
-                                GameResult.maxCombo = combo
+                        2.0 -> { // 長按起點
+                            val endNote = notes.find { it.type == 2.5 && it.lane == candidateNote.lane && it.time > candidateNote.time && !it.hit }
+                            if (endNote != null) {
+                                val judgment = judgeTiming(candidateNote.time, now)
+                                if (judgment != "Miss") {
+                                    holdingNote = candidateNote
+                                    holdEndNote = endNote
+                                    isHolding = true
+                                    currentHoldProgressTime = candidateNote.time
+                                    if (judgment == "Perfect" || judgment == "Great") {
+                                        combo++
+                                        showCombo = true
+                                        comboBounceTime = System.currentTimeMillis()
+                                    } else {
+                                        combo = 0
+                                        showCombo = false
+                                    }
+                                    showJudgmentText(judgment)
+                                } else {
+                                    combo = 0
+                                    showCombo = false
+                                    showJudgmentText("Miss")
+                                }
+                                invalidate()
+                                return true
                             }
-                            showCombo = true
-                            comboBounceTime = System.currentTimeMillis()
-                        } else {
-                            combo = 0
-                            showCombo = false
                         }
-                        showJudgmentText(judgment)
-                    } else {
-                        combo = 0
-                        showCombo = false
-                        showJudgmentText("Miss")
                     }
+                } else {
+                    // 沒擊中任何音符判 Miss
+                    combo = 0
+                    showCombo = false
+                    showJudgmentText("Miss")
                     invalidate()
                     return true
                 }
@@ -274,6 +259,18 @@ class NoteView(context: Context, private val notes: List<Note>) : View(context) 
 
         return true
     }
+
+    private fun getLaneFromX(x: Float): Int? {
+        for (i in 0 until laneLineCount - 1) {
+            val left = fieldRenderer.lineStartX[i]
+            val right = fieldRenderer.lineStartX[i + 1]
+            if (x >= left && x < right) {
+                return i
+            }
+        }
+        return null
+    }
+
 
     private fun judgeTiming(noteTime: Long, now: Long): String {
         val delta = abs(noteTime - now)

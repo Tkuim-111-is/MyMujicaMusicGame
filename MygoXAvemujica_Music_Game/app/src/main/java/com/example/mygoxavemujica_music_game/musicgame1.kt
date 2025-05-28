@@ -20,6 +20,8 @@ class musicgame1 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val songTitle = intent.getStringExtra("songTitle") ?: error("Missing songTitle")
+        GameResult.songTitle = songTitle
+
 
         dbHelper = MyDatabaseHelper(this)
         val db = dbHelper.readableDatabase
@@ -34,25 +36,9 @@ class musicgame1 : AppCompatActivity() {
         val singer = cursor.getString(cursor.getColumnIndexOrThrow("singer"))
         val bpm = cursor.getInt(cursor.getColumnIndexOrThrow("BPM"))
         val img = cursor.getString(cursor.getColumnIndexOrThrow("IMG"))
-
-        // 根據歌曲名稱決定資源檔名（這裡假設 IMG 欄位與資源檔名有關）
-        val musicResId = when (songTitle) {
-            "影色舞" -> R.raw.music_silhouettedance
-            "Imprisoned XII" -> R.raw.music_imprisonedxii
-            "KiLLKiSS" -> R.raw.music_killkiss
-            "春日影" -> R.raw.music_haruhikage
-            "迷星叫" -> R.raw.music_mayoiuta
-            else -> R.raw.music_silhouettedance // 預設或測試用
-        }
-
-        val jsonFileName = when (songTitle) {
-            "影色舞" -> "silhouettedance.json"
-            "Imprisoned XII" -> "imprisonedxii.json"
-            "KiLLKiSS" -> "killkiss.json"
-            "春日影" -> "haruhikage.json"
-            "迷星叫" -> "mayoiuta.json"
-            else -> "silhouettedance.json"
-        }
+        val musicResName = cursor.getString(cursor.getColumnIndexOrThrow("musicResName"))
+        val jsonFileName = cursor.getString(cursor.getColumnIndexOrThrow("jsonFileName"))
+        val musicResId = resources.getIdentifier(musicResName, "raw", packageName)
 
         val notes = loadNotesFromJson(jsonFileName)
         noteView = NoteView(this, notes)
@@ -96,6 +82,25 @@ class musicgame1 : AppCompatActivity() {
 }
 
 /*
+// 根據歌曲名稱決定資源檔名（這裡假設 IMG 欄位與資源檔名有關）
+        val musicResId = when (songTitle) {
+            "影色舞" -> R.raw.music_silhouettedance
+            "Imprisoned XII" -> R.raw.music_imprisonedxii
+            "KiLLKiSS" -> R.raw.music_killkiss
+            "春日影" -> R.raw.music_haruhikage
+            "迷星叫" -> R.raw.music_mayoiuta
+            else -> R.raw.music_silhouettedance // 預設或測試用
+        }
+
+        val jsonFileName = when (songTitle) {
+            "影色舞" -> "silhouettedance.json"
+            "Imprisoned XII" -> "imprisonedxii.json"
+            "KiLLKiSS" -> "killkiss.json"
+            "春日影" -> "haruhikage.json"
+            "迷星叫" -> "mayoiuta.json"
+            else -> "silhouettedance.json"
+        }
+
 // 停止音樂（例如當遊戲結束時）
 override fun onDestroy() {
     super.onDestroy()
