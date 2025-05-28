@@ -214,6 +214,9 @@ class NoteView(context: Context, private val notes: List<Note>) : View(context) 
                         // 只有 Perfect 跟 Great 才加 combo
                         if (judgment == "Perfect" || judgment == "Great") {
                             combo++
+                            if (combo > GameResult.maxCombo) {
+                                GameResult.maxCombo = combo
+                            }
                             showCombo = true
                             comboBounceTime = System.currentTimeMillis()
                         } else {
@@ -284,6 +287,13 @@ class NoteView(context: Context, private val notes: List<Note>) : View(context) 
     }
 
     private fun showJudgmentText(text: String) {
+        when (text) {
+            "Perfect" -> GameResult.perfectCount++
+            "Great" -> GameResult.greatCount++
+            "Good" -> GameResult.goodCount++
+            "Bad" -> GameResult.badCount++
+            "Miss" -> GameResult.missCount++
+        }
         judgmentText = text
         judgmentBounceStartTime = System.currentTimeMillis()
         judgmentVisible = true

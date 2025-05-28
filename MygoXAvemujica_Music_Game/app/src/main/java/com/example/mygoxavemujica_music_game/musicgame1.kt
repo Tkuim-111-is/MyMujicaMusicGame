@@ -6,6 +6,10 @@ import android.os.Bundle
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mygoxavemujica_music_game.database.MyDatabaseHelper
+import android.content.Intent
+import android.os.Handler
+import android.os.Looper
+import com.example.mygoxavemujica_music_game.model.FinalViewActivity
 
 class musicgame1 : AppCompatActivity() {
     private lateinit var dbHelper: MyDatabaseHelper
@@ -57,6 +61,15 @@ class musicgame1 : AppCompatActivity() {
 
         mediaPlayer = MediaPlayer.create(this, musicResId)
         mediaPlayer.start()  // 播放音樂
+
+        mediaPlayer.setOnCompletionListener {
+            // 音樂播放完後延遲 2 秒執行轉場
+            Handler(Looper.getMainLooper()).postDelayed({
+                val intent = Intent(this, FinalViewActivity::class.java)
+                startActivity(intent)
+                finish()
+            }, 2000)
+        }
 
         setContentView(noteView) //蓋掉原本的 XML 畫面
         cursor.close()

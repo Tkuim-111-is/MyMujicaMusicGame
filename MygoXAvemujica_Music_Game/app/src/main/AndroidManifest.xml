@@ -13,6 +13,9 @@
         android:theme="@style/Theme.MygoXAvemujica_Music_Game"
         tools:targetApi="31">
         <activity
+            android:name=".model.FinalViewActivity"
+            android:exported="false" />
+        <activity
             android:name=".SongListView"
             android:exported="false" />
         <activity
