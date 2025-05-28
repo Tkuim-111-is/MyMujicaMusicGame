@@ -18,13 +18,13 @@ class FinalViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.final_view)  // 這邊對應你的 XML 檔名
-        textView1 = findViewById(R.id.textView1)
-        textView2=findViewById(R.id.textView2)
-        textView3=findViewById(R.id.textView3)
-        textView9=findViewById(R.id.Perfectnum)
-        textView15=findViewById(R.id.Goodnum)
-        textView16=findViewById(R.id.Badnum)
-        textView17=findViewById(R.id.Missnum)
+        textView1 = findViewById(R.id.point)
+        textView2=findViewById(R.id.point)
+        textView3=findViewById(R.id.accuracy_num)
+        textView9=findViewById(R.id.perfect_num)
+        textView15=findViewById(R.id.Good_num)
+        textView16=findViewById(R.id.Bad_num)
+        textView17=findViewById(R.id.Miss_num)
     }
     public fun setText(content1: String, content2: String, content3: String,content9:String,content15:String,content16:String,content17:String,content18:String) {
         textView1.text = content1
