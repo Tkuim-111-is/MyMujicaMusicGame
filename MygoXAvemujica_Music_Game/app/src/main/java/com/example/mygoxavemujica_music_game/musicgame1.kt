@@ -15,13 +15,15 @@ class musicgame1 : AppCompatActivity() {
     private lateinit var dbHelper: MyDatabaseHelper
     private lateinit var noteView: NoteView
     private lateinit var mediaPlayer: MediaPlayer
+    init {
+        GameResult.reset()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val songTitle = intent.getStringExtra("songTitle") ?: error("Missing songTitle")
-        GameResult.songTitle = songTitle
-
+        music.songTitle = songTitle
 
         dbHelper = MyDatabaseHelper(this)
         val db = dbHelper.readableDatabase

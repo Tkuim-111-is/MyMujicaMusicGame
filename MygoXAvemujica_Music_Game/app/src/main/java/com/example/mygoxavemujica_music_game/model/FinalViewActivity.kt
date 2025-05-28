@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mygoxavemujica_music_game.R
 import com.example.mygoxavemujica_music_game.GameResult
+import com.example.mygoxavemujica_music_game.music
 import com.example.mygoxavemujica_music_game.SongListView
 import com.example.mygoxavemujica_music_game.musicgame1
 
@@ -58,7 +59,7 @@ class FinalViewActivity : AppCompatActivity() {
         val again = findViewById<ImageView>(R.id.playAgain)
         again.setOnClickListener {
             val intent = Intent(this, musicgame1::class.java)
-            intent.putExtra("songTitle", GameResult.songTitle)
+            intent.putExtra("songTitle", music.songTitle)
             startActivity(intent)
         }
     }

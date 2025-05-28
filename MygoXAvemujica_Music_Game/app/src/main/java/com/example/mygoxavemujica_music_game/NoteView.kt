@@ -142,114 +142,28 @@ class NoteView(context: Context, private val notes: List<Note>) : View(context) 
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val x = event.x
-        val y = event.y
         val now = System.currentTimeMillis() - startTime
 
-        // 用 x 座標判斷落在哪個 lane
-        val laneTouched = getLaneFromX(x)
-
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                if (laneTouched == null) return true // 沒判到 lane 就不處理
-
-                // 找時間窗口內且同 lane 尚未擊中的音符（時間差最小者）
-                val candidateNote = notes.filter {
-                    !it.hit && it.lane == laneTouched && abs(it.time - now) <= BAD_WINDOW
-                }.minByOrNull { abs(it.time - now) }
-
-                if (candidateNote != null) {
-                    when (candidateNote.type) {
-                        1.0, 3.0 -> { // 單擊或上滑
-                            val judgment = judgeTiming(candidateNote.time, now)
-                            if (judgment != "Miss") {
-                                candidateNote.hit = true
-                                if (judgment == "Perfect" || judgment == "Great") {
-                                    combo++
-                                    showCombo = true
-                                    comboBounceTime = System.currentTimeMillis()
-                                } else {
-                                    combo = 0
-                                    showCombo = false
-                                }
-                                showJudgmentText(judgment)
-                            } else {
-                                combo = 0
-                                showCombo = false
-                                showJudgmentText("Miss")
-                            }
-                            invalidate()
-                            return true
-                        }
-                        2.0 -> { // 長按起點
-                            val endNote = notes.find { it.type == 2.5 && it.lane == candidateNote.lane && it.time > candidateNote.time && !it.hit }
-                            if (endNote != null) {
-                                val judgment = judgeTiming(candidateNote.time, now)
-                                if (judgment != "Miss") {
-                                    holdingNote = candidateNote
-                                    holdEndNote = endNote
-                                    isHolding = true
-                                    currentHoldProgressTime = candidateNote.time
-                                    if (judgment == "Perfect" || judgment == "Great") {
-                                        combo++
-                                        showCombo = true
-                                        comboBounceTime = System.currentTimeMillis()
-                                    } else {
-                                        combo = 0
-                                        showCombo = false
-                                    }
-                                    showJudgmentText(judgment)
-                                } else {
-                                    combo = 0
-                                    showCombo = false
-                                    showJudgmentText("Miss")
-                                }
-                                invalidate()
-                                return true
-                            }
-                        }
-                    }
-                } else {
-                    // 沒擊中任何音符判 Miss
-                    combo = 0
-                    showCombo = false
-                    showJudgmentText("Miss")
-                    invalidate()
-                    return true
-                }
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
+                // 單指或多指按下事件，處理當前觸發的指標
+                val pointerIndex = event.actionIndex
+                val x = event.getX(pointerIndex)
+                val y = event.getY(pointerIndex)
+                handleTouchDown(x, y, now)
             }
 
             MotionEvent.ACTION_MOVE -> {
-                if (isHolding && holdingNote != null && holdEndNote != null) {
-                    if (isTouchInHoldRect(x, y, now)) {
-                        currentHoldProgressTime = now.coerceAtMost(holdEndNote!!.time)
-                        invalidate()
-                    } else {
-                        combo = 0
-                        showCombo = false
-
-                        holdingNote?.hit = true
-                        holdEndNote?.hit = true
-
-                        showJudgmentText("Miss")
-                        cancelHold()
-                    }
+                // 多指移動時，檢查所有指頭位置，處理長按判定
+                for (i in 0 until event.pointerCount) {
+                    val x = event.getX(i)
+                    val y = event.getY(i)
+                    handleTouchMove(x, y, now)
                 }
             }
 
-            MotionEvent.ACTION_UP -> {
-                if (isHolding && holdingNote != null && holdEndNote != null) {
-                    if (currentHoldProgressTime < holdEndNote!!.time) {
-                        combo = 0
-                        showCombo = false
-                        holdingNote?.hit = true
-                        holdEndNote?.hit = true
-                        showJudgmentText("Miss")
-                    } else {
-                        holdingNote?.hit = true
-                        holdEndNote?.hit = true
-                    }
-                }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_CANCEL -> {
+                // 手指放開或取消，結束長按判定
                 isHolding = false
                 holdingNote = null
                 holdEndNote = null
@@ -258,6 +172,101 @@ class NoteView(context: Context, private val notes: List<Note>) : View(context) 
         }
 
         return true
+    }
+
+    private fun handleTouchDown(x: Float, y: Float, now: Long) {
+        val laneTouched = getLaneFromX(x)
+        if (laneTouched == null) return
+
+        val candidateNote = notes.filter {
+            !it.hit && it.lane == laneTouched &&
+                    now in (it.time - 400)..(it.time + BAD_WINDOW)
+        }.minByOrNull { abs(it.time - now) }
+
+        if (candidateNote != null) {
+            when (candidateNote.type) {
+                1.0, 3.0 -> { // 單擊或上滑
+                    val judgment = judgeTiming(candidateNote.time, now)
+                    if (judgment != "Miss") {
+                        candidateNote.hit = true
+                        if (judgment == "Perfect" || judgment == "Great") {
+                            combo++
+                            if (combo > GameResult.maxCombo) {
+                                GameResult.maxCombo = combo
+                            }
+                            showCombo = true
+                            comboBounceTime = System.currentTimeMillis()
+                        } else {
+                            combo = 0
+                            showCombo = false
+                        }
+                        showJudgmentText(judgment)
+                    } else {
+                        combo = 0
+                        showCombo = false
+                        showJudgmentText("Miss")
+                    }
+                    invalidate()
+                }
+                2.0 -> { // 長按起點
+                    val endNote = notes.find { it.type == 2.5 && it.lane == candidateNote.lane && it.time > candidateNote.time && !it.hit }
+                    if (endNote != null) {
+                        val judgment = judgeTiming(candidateNote.time, now)
+                        if (judgment != "Miss") {
+                            holdingNote = candidateNote
+                            holdEndNote = endNote
+                            isHolding = true
+                            currentHoldProgressTime = candidateNote.time
+                            if (judgment == "Perfect" || judgment == "Great") {
+                                combo++
+                                if (combo > GameResult.maxCombo) {
+                                    GameResult.maxCombo = combo
+                                }
+                                showCombo = true
+                                comboBounceTime = System.currentTimeMillis()
+                            } else {
+                                combo = 0
+                                showCombo = false
+                            }
+                            showJudgmentText(judgment)
+                        } else {
+                            combo = 0
+                            showCombo = false
+                            showJudgmentText("Miss")
+                        }
+                        invalidate()
+                    }
+                }
+            }
+        } else {
+            val earliestNoteStartTime = notes.filter { !it.hit && it.lane == laneTouched }
+                .minOfOrNull { it.time - 400 } ?: Long.MAX_VALUE
+
+            if (now >= earliestNoteStartTime) {
+                combo = 0
+                showCombo = false
+                showJudgmentText("Miss")
+                invalidate()
+            }
+        }
+    }
+
+    private fun handleTouchMove(x: Float, y: Float, now: Long) {
+        if (isHolding && holdingNote != null && holdEndNote != null) {
+            if (isTouchInHoldRect(x, y, now)) {
+                currentHoldProgressTime = now.coerceAtMost(holdEndNote!!.time)
+                invalidate()
+            } else {
+                combo = 0
+                showCombo = false
+
+                holdingNote?.hit = true
+                holdEndNote?.hit = true
+
+                showJudgmentText("Miss")
+                cancelHold()
+            }
+        }
     }
 
     private fun getLaneFromX(x: Float): Int? {
