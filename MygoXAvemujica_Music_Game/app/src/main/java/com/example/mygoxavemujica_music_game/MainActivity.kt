@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         }
         val startBtn = findViewById<Button>(R.id.start_game)
         startBtn.setOnClickListener {
-            val intent = Intent(this, SongListView::class.java)
+            val intent = Intent(this, SongListView2::class.java)
             startActivity(intent)
         }
     }

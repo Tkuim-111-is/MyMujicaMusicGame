@@ -21,17 +21,18 @@ class MyDatabaseHelper(context: Context)
                 BPM INTEGER NOT NULL,
                 IMG TEXT NOT NULL,
                 musicResName TEXT NOT NULL,
-                jsonFileName TEXT NOT NULL
+                jsonFileName TEXT NOT NULL,
+                point TEXT NOT NULL
             );
         """.trimIndent()
 
         db.execSQL(createUserTable)
 
-        db.execSQL("INSERT INTO songlist (name, singer, BPM, IMG, musicResName, jsonFileName) VALUES ('影色舞', 'MyGO!!!!!', 166,'img_silhouettedance', 'music_silhouettedance', 'silhouettedance.json')")
-        db.execSQL("INSERT INTO songlist (name, singer, BPM, IMG, musicResName, jsonFileName) VALUES ('Imprisoned XII', 'Ave Mujica', 158,'img_imprisonedxii', 'music_imprisonedxii', 'imprisonedxii.json')")
-        db.execSQL("INSERT INTO songlist (name, singer, BPM, IMG, musicResName, jsonFileName) VALUES ('KiLLKiSS', 'Ave Mujica', 200,'img_killkiss', 'music_killkiss', 'killkiss.json')")
-        db.execSQL("INSERT INTO songlist (name, singer, BPM, IMG, musicResName, jsonFileName) VALUES ('春日影', 'MyGO!!!!!', 97,'img_haruhikage', 'music_haruhikage', 'haruhikage.json')")
-        db.execSQL("INSERT INTO songlist (name, singer, BPM, IMG, musicResName, jsonFileName) VALUES ('迷星叫', 'MyGO!!!!!', 190,'img_mayoiuta', 'music_mayoiuta', 'mayoiuta.json')")
+        db.execSQL("INSERT INTO songlist (name, singer, BPM, IMG, musicResName, jsonFileName, point) VALUES ('影色舞', 'MyGO!!!!!', 166,'img_silhouettedance', 'music_silhouettedance', 'silhouettedance.json', '0000000')")
+        db.execSQL("INSERT INTO songlist (name, singer, BPM, IMG, musicResName, jsonFileName, point) VALUES ('Imprisoned XII', 'Ave Mujica', 158,'img_imprisonedxii', 'music_imprisonedxii', 'imprisonedxii.json', '0000000')")
+        db.execSQL("INSERT INTO songlist (name, singer, BPM, IMG, musicResName, jsonFileName, point) VALUES ('KiLLKiSS', 'Ave Mujica', 200,'img_killkiss', 'music_killkiss', 'killkiss.json', '0000000')")
+        db.execSQL("INSERT INTO songlist (name, singer, BPM, IMG, musicResName, jsonFileName, point) VALUES ('春日影', 'MyGO!!!!!', 97,'img_haruhikage', 'music_haruhikage', 'haruhikage.json', '0000000')")
+        db.execSQL("INSERT INTO songlist (name, singer, BPM, IMG, musicResName, jsonFileName, point) VALUES ('迷星叫', 'MyGO!!!!!', 190,'img_mayoiuta', 'music_mayoiuta', 'mayoiuta.json', '0000000')")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

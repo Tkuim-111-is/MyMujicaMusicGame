@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MygoXAvemujica_Music_Game</string>
+    <string name="title_activity_song_list_view2">songListView2</string>
 </resources>

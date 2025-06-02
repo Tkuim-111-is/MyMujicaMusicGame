@@ -71,8 +71,8 @@ class SongListView : AppCompatActivity() {
                 cursor.getInt(0),
                 cursor.getString(1),
                 cursor.getString(2),
-                cursor.getInt(3),
-                cursor.getString(4)
+                cursor.getString(4),
+                cursor.getString(7)
             )
             songList.add(song)
         }
