@@ -9,8 +9,13 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import android.graphics.BitmapFactory
+import android.graphics.RenderEffect
+import android.graphics.Shader
+import android.os.Build
 import com.example.mygoxavemujica_music_game.database.MyDatabaseHelper
 import com.example.mygoxavemujica_music_game.model.Song
+
 
 class SongListView2 : AppCompatActivity() {
     private lateinit var image: ImageView
@@ -135,6 +140,15 @@ class SongListView2 : AppCompatActivity() {
         pointText.text = "Score: ${song.point.padStart(7, '0')}"
         val resId = resources.getIdentifier(song.img, "drawable", packageName)
         val musicResId = resources.getIdentifier(song.musicResName, "raw", packageName)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val blurImageView = findViewById<ImageView>(R.id.background)
+            val bitmap = BitmapFactory.decodeResource(resources, resId)
+            val renderEffect = RenderEffect.createBlurEffect(40f, 40f, Shader.TileMode.CLAMP)
+            blurImageView.setRenderEffect(renderEffect)
+            blurImageView.setImageBitmap(bitmap)
+            blurImageView.visibility = View.VISIBLE
+        }
 
         if (direction == 0) {
             image.setImageResource(resId)

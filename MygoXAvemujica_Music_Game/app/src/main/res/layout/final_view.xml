@@ -14,7 +14,7 @@
         android:layout_width="451dp"
         android:layout_height="134dp"
         android:layout_marginStart="428dp"
-        android:layout_marginTop="204dp"
+        android:layout_marginTop="184dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/img_2" />
@@ -35,6 +35,43 @@
         android:layout_height="83dp"
         android:layout_marginStart="456dp"
         android:layout_marginBottom="256dp"
+        android:drawableTint="#F8F8F8"
+        android:textColor="#FFFFFF"
+        android:gravity="end"
+        android:textSize="48sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/newbest"
+        android:layout_width="90dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="456dp"
+        android:layout_marginBottom="216dp"
+        android:drawableTint="#F8F8F8"
+        android:textColor="#FFFFFF"
+        android:textSize="48sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/originpoint"
+        android:layout_width="90dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="552dp"
+        android:layout_marginBottom="216dp"
+        android:drawableTint="#F8F8F8"
+        android:textColor="#FFFFFF"
+        android:textSize="48sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/pluspoint"
+        android:layout_width="90dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="648dp"
+        android:layout_marginBottom="216dp"
         android:drawableTint="#F8F8F8"
         android:textColor="#FFFFFF"
         android:textSize="48sp"
@@ -212,22 +249,24 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="483dp"
-        android:layout_height="360dp"
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/playsong_image"
+        android:layout_width="440dp"
+        android:layout_height="330dp"
         android:layout_marginStart="4dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="32dp"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:shapeAppearanceOverlay="@style/ParallelogramShape"
         app:srcCompat="@drawable/_2" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/point_image"
         android:layout_width="127dp"
         android:layout_height="111dp"
-        android:layout_marginStart="724dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginStart="736dp"
+        android:layout_marginTop="56dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/_2" />

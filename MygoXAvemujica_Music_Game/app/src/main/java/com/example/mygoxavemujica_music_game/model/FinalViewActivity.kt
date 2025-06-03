@@ -39,8 +39,8 @@ class FinalViewActivity : AppCompatActivity() {
         Good = findViewById(R.id.Good_num)
         Bad = findViewById(R.id.Bad_num)
         Miss = findViewById(R.id.Miss_num)
-        point_image = findViewById(R.id.imageView)
-        playsong_image = findViewById(R.id.imageView9)
+        point_image = findViewById(R.id.point_image)
+        playsong_image = findViewById(R.id.playsong_image)
 
         Perfect.text = GameResult.perfectCount.toString()
         Great.text = GameResult.greatCount.toString()
