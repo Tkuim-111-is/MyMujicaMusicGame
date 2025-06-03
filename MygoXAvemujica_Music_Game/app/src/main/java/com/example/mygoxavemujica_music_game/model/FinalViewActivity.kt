@@ -1,6 +1,7 @@
 package com.example.mygoxavemujica_music_game.model
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,6 +14,7 @@ import com.example.mygoxavemujica_music_game.musicgame1
 import com.example.mygoxavemujica_music_game.database.MyDatabaseHelper
 
 class FinalViewActivity : AppCompatActivity() {
+
     private lateinit var dbHelper: MyDatabaseHelper
     private lateinit var point: TextView
     private lateinit var MaxCombo: TextView
@@ -25,9 +27,11 @@ class FinalViewActivity : AppCompatActivity() {
     private lateinit var point_image : ImageView
     private lateinit var playsong_image : ImageView
 
+    private var mediaPlayer: MediaPlayer? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.final_view)  // 對應你的 XML
+        setContentView(R.layout.final_view)
 
         dbHelper = MyDatabaseHelper(this)
 
@@ -63,7 +67,6 @@ class FinalViewActivity : AppCompatActivity() {
 
         point.text = pointScore.toString()
 
-        // 比較資料庫的最高分並更新（整合部分）
         val currentPointInDB = dbHelper.getPointBySongName(music.songTitle)
         val finalPointScoreLong = pointScore.toLong()
 
@@ -71,7 +74,6 @@ class FinalViewActivity : AppCompatActivity() {
             dbHelper.updatePointBySongName(music.songTitle, finalPointScoreLong.toString())
         }
 
-        // 設定評分圖片
         when {
             pointScore > 960000 -> point_image.setImageResource(R.drawable.s)
             pointScore > 820000 -> point_image.setImageResource(R.drawable.a)
@@ -80,7 +82,6 @@ class FinalViewActivity : AppCompatActivity() {
             else -> point_image.setImageResource(R.drawable.fail)
         }
 
-        // 播放歌曲圖片
         val imgName = getImageNameBySongTitle(music.songTitle)
         if (!imgName.isNullOrEmpty()) {
             val resId = resources.getIdentifier(imgName, "drawable", packageName)
@@ -89,14 +90,19 @@ class FinalViewActivity : AppCompatActivity() {
             }
         }
 
-        val GoBack = findViewById<ImageView>(R.id.goBack)
-        GoBack.setOnClickListener {
+        // 播放 dora_a_mu.mp3 並設置循環
+        val resId = resources.getIdentifier("georgette_me_georgette_you", "raw", packageName)
+        mediaPlayer = MediaPlayer.create(this, resId).apply {
+            isLooping = true
+            start()
+        }
+
+        findViewById<ImageView>(R.id.goBack).setOnClickListener {
             val intent = Intent(this, SongListView2::class.java)
             startActivity(intent)
         }
 
-        val again = findViewById<ImageView>(R.id.playAgain)
-        again.setOnClickListener {
+        findViewById<ImageView>(R.id.playAgain).setOnClickListener {
             val intent = Intent(this, musicgame1::class.java)
             intent.putExtra("songTitle", music.songTitle)
             startActivity(intent)
@@ -112,5 +118,12 @@ class FinalViewActivity : AppCompatActivity() {
         }
         cursor.close()
         return imgName
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mediaPlayer?.stop()
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 }
