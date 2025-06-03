@@ -57,4 +57,28 @@ class MyDatabaseHelper(context: Context)
         db.execSQL("DROP TABLE IF EXISTS songtime")
         onCreate(db)
     }
+
+    // 讀取指定歌曲的 point（轉成 Long）
+    fun getPointBySongName(songName: String): Long {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT point FROM songlist WHERE name = ?", arrayOf(songName))
+        var pointValue = 0L
+        if (cursor.moveToFirst()) {
+            val pointStr = cursor.getString(0)
+            pointValue = pointStr.toLongOrNull() ?: 0L
+        }
+        cursor.close()
+        return pointValue
+    }
+
+    // 更新指定歌曲的 point（字串）
+    fun updatePointBySongName(songName: String, newPoint: String): Int {
+        val db = writableDatabase
+        val sql = "UPDATE songlist SET point = ? WHERE name = ?"
+        val stmt = db.compileStatement(sql)
+        stmt.bindString(1, newPoint)
+        stmt.bindString(2, songName)
+        return stmt.executeUpdateDelete()  // 回傳影響筆數
+    }
+
 }

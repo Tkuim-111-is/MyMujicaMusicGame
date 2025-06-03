@@ -22,6 +22,7 @@ class SongListView2 : AppCompatActivity() {
     private lateinit var songName: TextView
     private lateinit var singerName: TextView
     private lateinit var pointText: TextView
+    private lateinit var imgLevel:ImageView
     private lateinit var dbHelper: MyDatabaseHelper
     private val songList = mutableListOf<Song>()
     private var currentIndex = 0
@@ -39,6 +40,7 @@ class SongListView2 : AppCompatActivity() {
         songName = findViewById(R.id.songName)
         singerName = findViewById(R.id.singerName)
         pointText = findViewById(R.id.pointText)
+        imgLevel = findViewById(R.id.imgLevel)
         dbHelper = MyDatabaseHelper(this)
 
         loadSongsFromDatabase()
@@ -134,12 +136,29 @@ class SongListView2 : AppCompatActivity() {
         handler.post(loopRunnable!!)
     }
 
+    private fun updateLevelImage(pointScore: Int, imageView: ImageView) {
+        if (pointScore == 0) {
+            imageView.setImageDrawable(null)  // 清除圖片
+            return
+        }
+        when {
+            pointScore > 960000 -> imageView.setImageResource(R.drawable.s)
+            pointScore > 820000 -> imageView.setImageResource(R.drawable.a)
+            pointScore > 680000 -> imageView.setImageResource(R.drawable.b)
+            pointScore > 540000 -> imageView.setImageResource(R.drawable.c)
+            else -> imageView.setImageResource(R.drawable.fail)
+        }
+    }
+
     private fun updateUIWithAnimation(direction: Int) {
         val song = songList[currentIndex]
 
         pointText.text = "Score: ${song.point.padStart(7, '0')}"
         val resId = resources.getIdentifier(song.img, "drawable", packageName)
         val musicResId = resources.getIdentifier(song.musicResName, "raw", packageName)
+
+        val pointScoreInt = song.point.toIntOrNull() ?: 0
+        updateLevelImage(pointScoreInt, imgLevel)  // 用 imgLevel 更新等級圖示
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val blurImageView = findViewById<ImageView>(R.id.background)

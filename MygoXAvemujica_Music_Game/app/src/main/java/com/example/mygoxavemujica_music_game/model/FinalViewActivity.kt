@@ -1,18 +1,16 @@
 package com.example.mygoxavemujica_music_game.model
 
 import android.content.Intent
-import android.media.Image
 import android.os.Bundle
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mygoxavemujica_music_game.R
 import com.example.mygoxavemujica_music_game.GameResult
 import com.example.mygoxavemujica_music_game.music
-import com.example.mygoxavemujica_music_game.SongListView
-import com.example.mygoxavemujica_music_game.database.MyDatabaseHelper
+import com.example.mygoxavemujica_music_game.SongListView2
 import com.example.mygoxavemujica_music_game.musicgame1
+import com.example.mygoxavemujica_music_game.database.MyDatabaseHelper
 
 class FinalViewActivity : AppCompatActivity() {
     private lateinit var dbHelper: MyDatabaseHelper
@@ -26,9 +24,11 @@ class FinalViewActivity : AppCompatActivity() {
     private lateinit var Miss: TextView
     private lateinit var point_image : ImageView
     private lateinit var playsong_image : ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.final_view)  // 這邊對應你的 XML 檔名
+        setContentView(R.layout.final_view)  // 對應你的 XML
+
         dbHelper = MyDatabaseHelper(this)
 
         point = findViewById(R.id.point)
@@ -55,26 +55,32 @@ class FinalViewActivity : AppCompatActivity() {
 
         Accuracy.text = String.format("%.2f%%", accuracy)
 
-        val point_average = 1000000/totalNotes
-        val pointScore = GameResult.perfectCount * point_average + GameResult.greatCount * 0.75 * point_average + GameResult.goodCount * 0.5 * point_average +  GameResult.badCount * 0.25 * point_average
+        val point_average = 1000000 / totalNotes
+        val pointScore = GameResult.perfectCount * point_average +
+                GameResult.greatCount * 0.75 * point_average +
+                GameResult.goodCount * 0.5 * point_average +
+                GameResult.badCount * 0.25 * point_average
+
         point.text = pointScore.toString()
 
-        if(pointScore>960000){
-            point_image.setImageResource(R.drawable.s)
-        }
-        else if(pointScore>820000){
-            point_image.setImageResource(R.drawable.a)
-        }
-        else if(pointScore>680000){
-            point_image.setImageResource(R.drawable.b)
-        }
-        else if(pointScore>540000){
-            point_image.setImageResource(R.drawable.c)
-        }
-        else{
-            point_image.setImageResource(R.drawable.fail)
+        // 比較資料庫的最高分並更新（整合部分）
+        val currentPointInDB = dbHelper.getPointBySongName(music.songTitle)
+        val finalPointScoreLong = pointScore.toLong()
+
+        if (finalPointScoreLong > currentPointInDB) {
+            dbHelper.updatePointBySongName(music.songTitle, finalPointScoreLong.toString())
         }
 
+        // 設定評分圖片
+        when {
+            pointScore > 960000 -> point_image.setImageResource(R.drawable.s)
+            pointScore > 820000 -> point_image.setImageResource(R.drawable.a)
+            pointScore > 680000 -> point_image.setImageResource(R.drawable.b)
+            pointScore > 540000 -> point_image.setImageResource(R.drawable.c)
+            else -> point_image.setImageResource(R.drawable.fail)
+        }
+
+        // 播放歌曲圖片
         val imgName = getImageNameBySongTitle(music.songTitle)
         if (!imgName.isNullOrEmpty()) {
             val resId = resources.getIdentifier(imgName, "drawable", packageName)
@@ -85,7 +91,7 @@ class FinalViewActivity : AppCompatActivity() {
 
         val GoBack = findViewById<ImageView>(R.id.goBack)
         GoBack.setOnClickListener {
-            val intent = Intent(this, SongListView::class.java)
+            val intent = Intent(this, SongListView2::class.java)
             startActivity(intent)
         }
 
