@@ -13,6 +13,9 @@ import com.example.mygoxavemujica_music_game.SongListView2
 import com.example.mygoxavemujica_music_game.musicgame1
 import com.example.mygoxavemujica_music_game.database.MyDatabaseHelper
 import org.w3c.dom.Text
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 
 class FinalViewActivity : AppCompatActivity() {
 
@@ -36,6 +39,14 @@ class FinalViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.final_view)
+
+        // 設定全螢幕沉浸式模式
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowInsetsControllerCompat(window, window.decorView).let { controller ->
+            controller.hide(WindowInsetsCompat.Type.systemBars())
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
 
         dbHelper = MyDatabaseHelper(this)
 

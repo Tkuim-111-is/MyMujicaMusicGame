@@ -15,6 +15,9 @@ import android.graphics.Shader
 import android.os.Build
 import com.example.mygoxavemujica_music_game.database.MyDatabaseHelper
 import com.example.mygoxavemujica_music_game.model.Song
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 
 
 class SongListView2 : AppCompatActivity() {
@@ -34,6 +37,14 @@ class SongListView2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_song_list_view2)
+
+        // 設定全螢幕沉浸式模式
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowInsetsControllerCompat(window, window.decorView).let { controller ->
+            controller.hide(WindowInsetsCompat.Type.systemBars())
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
 
         val startButton = findViewById<ImageView>(R.id.start)
         image = findViewById(R.id.image)

@@ -10,6 +10,9 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import com.example.mygoxavemujica_music_game.model.FinalViewActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 
 class musicgame1 : AppCompatActivity() {
     private lateinit var dbHelper: MyDatabaseHelper
@@ -21,6 +24,14 @@ class musicgame1 : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 設定全螢幕沉浸式模式
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowInsetsControllerCompat(window, window.decorView).let { controller ->
+            controller.hide(WindowInsetsCompat.Type.systemBars())
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
 
         val songTitle = intent.getStringExtra("songTitle") ?: error("Missing songTitle")
         music.songTitle = songTitle

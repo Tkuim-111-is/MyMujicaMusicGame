@@ -51,8 +51,10 @@
             android:id="@+id/lineOnCircle"
             android:layout_width="500dp"
             android:layout_height="60dp"
-            android:layout_marginTop="376dp"
-            android:background="#88000000" />
+            android:layout_marginTop="356dp"
+            android:background="#88000000"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/lineOnCircle2"
@@ -78,18 +80,26 @@
             android:layout_width="160dp"
             android:layout_height="60dp"
             android:layout_marginStart="100dp"
-            android:layout_marginTop="376dp"
+            android:layout_marginTop="356dp"
             android:textColor="#FFFFFF"
             android:textSize="36sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imgLevel"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="300dp"
+            android:layout_marginTop="326dp"
+            app:srcCompat="@drawable/_2" />
 
         <TextView
             android:id="@+id/pointText"
             android:layout_width="100dp"
             android:layout_height="30dp"
-            android:textColor="#FFFFFF"
             android:layout_marginStart="300dp"
-            android:layout_marginTop="406dp" />
+            android:layout_marginTop="386dp"
+            android:textColor="#FFFFFF" />
 
         <ImageView
             android:id="@+id/start"
@@ -102,14 +112,6 @@
             android:focusable="true"
             android:contentDescription="Start button"
             app:srcCompat="@android:drawable/ic_media_play" />
-
-        <ImageView
-            android:id="@+id/imgLevel"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="300dp"
-            android:layout_marginTop="346dp"
-            app:srcCompat="@drawable/_2"/>
 
         <ImageView
             android:id="@+id/outcircle"
