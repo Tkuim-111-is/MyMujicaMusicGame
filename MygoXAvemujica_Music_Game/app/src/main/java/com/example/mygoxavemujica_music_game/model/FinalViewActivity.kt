@@ -72,7 +72,7 @@ class FinalViewActivity : AppCompatActivity() {
         MaxCombo.text = GameResult.maxCombo.toString()
 
         val totalNotes = GameResult.perfectCount + GameResult.greatCount + GameResult.goodCount + GameResult.badCount + GameResult.missCount
-        val hitNotes = GameResult.perfectCount + GameResult.greatCount + GameResult.goodCount + GameResult.badCount
+        val hitNotes = GameResult.perfectCount + GameResult.greatCount
         val accuracy = if (totalNotes > 0) (hitNotes * 100.0 / totalNotes) else 0.0
 
         Accuracy.text = String.format("%.2f%%", accuracy)
