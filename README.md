@@ -1,6 +1,6 @@
 <div align="center">
 <img width="800" alt="header image" src="https://github.com/user-attachments/assets/110869dd-a9a4-40d8-9c0e-c10886bccc38">
-<h3 align="center">MygoXAvemujica Music Game</h3>
+<h3 align="center">MygoXAvemujica_Music_Game</h3>
   <p align="center">
     行動APP敏捷開發管理實務 期末專題
     <br />
