@@ -11,5 +11,7 @@
     <a href="https://drive.google.com/file/d/1-M1YzF2vTKpbMbIiqkBTaWTusKcONnjU/view?usp=sharing">View Demo</a>
     ·
     <a href="https://www.canva.com/design/DAGj9fPoB3w/3MMlXz0jRTMULGmQ2af-bw/edit?utm_content=DAGj9fPoB3w&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Canva</a>
+    ·
+    <a href="https://github.com/JeffreyLeeTW/ScoreEditor">Unity樂譜製作器</a>
   </p>
 </div>
